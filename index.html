@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <link rel="stylesheet" href="style.css" />
+
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chatbot</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="chatbox">
+        <div class="chatbox__support">
+          <div class="chatbox__header">
+            <div class="chatbox__image--header">
+              <img src="./img/bot.png" width="40px" />
+            </div>
+            <div class="chatbox__content--header">
+              <h4 class="chatbox__heading--header">ReciclaPeru</h4>
+              <p class="chatbox__description--header">
+                ♻️ Hola , Soy botchi , tu asistente de Recicla Perú 🌍🌱
+              </p>
+            </div>
+          </div>
+
+          <div id="chat-container" class="chatbox__messages">
+            <div class="messages__item messages__item--visitor">
+              🌳🌳¿En qué puedo ayudarte?😊🌳🌳
+            </div>
+          </div>
+          <div class="chatbox__footer">
+            <input
+              type="text"
+              id="user-input"
+              placeholder="Escribe tu pregunta..." />
+            <button
+              onclick="enviarMensaje()"
+              class="chatbox__send--footer send__button">
+              Enviar
+            </button>
+          </div>
+        </div>
+        <div class="chatbox__button">
+          <button><img src="./img/bot.png" width="60px" /></button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./app.js"></script>
+    <script>
+      function enviarMensaje() {
+        var userInput = document.getElementById("user-input").value.trim();
+
+        if (userInput !== "") {
+          var chatContainer = document.getElementById("chat-container");
+          var userMessage =
+            '<div class="messages__item messages__item--operator">' +
+            userInput +
+            "</div>";
+          chatContainer.innerHTML += userMessage;
+
+          // Hacer la solicitud AJAX al archivo chatbot.php
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "php/chatbot.php?msg=" + userInput, true);
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              var botMessage =
+                '<div class="messages__item messages__item--visitor">' +
+                xhr.responseText +
+                "</div>";
+              chatContainer.innerHTML += botMessage;
+              chatContainer.scrollTop = chatContainer.scrollHeight; // Desplazar hacia abajo automáticamente
+            }
+          };
+          xhr.send();
+        }
+
+        document.getElementById("user-input").value = ""; // Limpiar el input después de enviar
+      }
+    </script>
+  </body>
+</html>
